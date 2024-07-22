@@ -5,6 +5,7 @@ import os
 from colorama import just_fix_windows_console
 just_fix_windows_console()
 from colorama import Fore, Style
+from time import sleep
 
 
 
@@ -43,6 +44,7 @@ if confirm == 'y':
     print(Fore.YELLOW + 'Renaming '+ name + ' to new filename ' + newfilename)
     os.rename(name, newfilename)
     print(Fore.GREEN + 'Renaming '+ name + ' to new filename ' + newfilename + ' completed successfully.')
+    sleep(0.2)
 else:
   print(Fore.RED + 'Not receiving correct input. Exiting...\n')
   print(Style.RESET_ALL)

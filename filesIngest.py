@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import ( QApplication, QFileDialog, )
+from PySide6.QtWidgets import ( QApplication, QFileDialog, QWidget, QVBoxLayout, QTextEdit, )
 
 app = QApplication([]) # QApplication must be initialized before QWidget
 

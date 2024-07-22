@@ -52,16 +52,13 @@ table.field_names = ["File Path", "File Name", "File Date Extract"]
 img.select_image_file()
 
 
+
 # for listing in table
 for i in img.getFileList():
-  
   date_obj = getImageDate(i)
-
   date_formatted = date_obj.strftime("%d/%m/%Y")
-  
   table.add_row([i, os.path.basename(i), date_formatted])
   
-
 print(table)
 
 
