@@ -1,3 +1,5 @@
+from filesIngest import filesIngest
+
 import subprocess
 import os
 from datetime import datetime
@@ -9,12 +11,11 @@ from colorama import just_fix_windows_console
 just_fix_windows_console()
 from colorama import Fore, Style
 
-from PySide6.QtWidgets import ( QApplication, QFileDialog, )
 
 
 if platform.system() == 'Windows':
-    import win32file
-    import pywintypes
+  import win32file
+  import pywintypes
 
 
 
@@ -23,34 +24,6 @@ exiftool_location = r"C:\Program Files\XnViewMP\AddOn"
 
 # change directory to the exiftool location first
 os.chdir(exiftool_location)
-
-
-app = QApplication([]) # QApplication must be initialized before QWidget
-
-
-class filesIngest:
-  def select_image_file(self):
-    """
-    Def for open dialog Select multiple image file
-    """
-    file_dialog = QFileDialog()
-    file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-    file_dialog.setNameFilter("Images (*.png *.xpm *.jpg *.jpeg *.gif)")
-    file_dialog.setDirectory("/")
-    file_dialog.setWindowTitle("Select images to modify its EXIF timestamps")
-
-    if file_dialog.exec():
-      self.files = file_dialog.selectedFiles()
-
-  
-  def getFileList(self):
-    """
-    Def for get file list
-    """
-    return self.files
-
-
-
 
 
 def getImageDate(filepath):
