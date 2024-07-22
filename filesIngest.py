@@ -3,15 +3,22 @@ from PySide6.QtWidgets import ( QApplication, QFileDialog, QWidget, QVBoxLayout,
 app = QApplication([]) # QApplication must be initialized before QWidget
 
 class filesIngest:
-  def select_image_file(self):
+  def select_files(self, kind):
     """
     Def for open dialog Select multiple image file
     """
     file_dialog = QFileDialog()
     file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-    file_dialog.setNameFilter("Images (*.png *.xpm *.jpg *.jpeg *.gif)")
+
+    if kind == 'images':
+      file_dialog.setNameFilter("Images (*.png *.xpm *.jpg *.jpeg *.gif)")
+      file_dialog.setWindowTitle("Select images to modify its EXIF timestamps")
+    elif kind == 'videos':
+      file_dialog.setNameFilter("Videos (*.mp4 *.mov *.avi *.mkv)")
+      file_dialog.setWindowTitle("Select images to modify its encoding date and other things")
+
     file_dialog.setDirectory("/")
-    file_dialog.setWindowTitle("Select images to modify its EXIF timestamps")
+    
 
     if file_dialog.exec():
       self.files = file_dialog.selectedFiles()
