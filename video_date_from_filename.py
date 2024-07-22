@@ -1,4 +1,6 @@
 from filesIngest import filesIngest
+from countdown import countdown
+from raw import convert2raw
 
 import subprocess
 import os
@@ -6,6 +8,7 @@ from datetime import datetime
 from prettytable import PrettyTable
 from time import sleep
 import platform
+from send2trash import send2trash
 
 from colorama import just_fix_windows_console
 just_fix_windows_console()
@@ -104,10 +107,21 @@ for j in img.getFileList():
 
 
     ## TODO: change date encoded
-    # command = f'./exiftool -AllDates="{dateobj}" -overwrite_original "{j}"'
+    date_time_string = f"{dateobj.strftime("%Y-%m-%d")} 00:00:00"  # Time is set to 00:00:00
+    tempfilename = f'{os.path.dirname(j)}/temp.mp4'
+    command = f'ffmpeg -y -i "{j}" -c copy -metadata creation_time="{date_time_string}" "{tempfilename}"'
     ### YES WINDOWS TERMINAL CAN ONLY INTERPRET DOUBLE QUOTE AS ENCLOSING FOR ANY THAT HAS SPACES!
-    # print(command)
-    # subprocess.run(command)
+    print(command)
+    print(tempfilename)
+    
+    if os.path.exists(j): countdown(Fore.YELLOW + 'File ' + j + ' will be overitten. Please cancel in', 10)
+    print(Style.RESET_ALL)
+
+    subprocess.run(command)
+    sleep(0.5)
+    send2trash( convert2raw(j) )
+    sleep(0.5)
+    os.rename( tempfilename , j )
     
 
 
