@@ -12,14 +12,24 @@ from time import sleep
 table = PrettyTable()
 table.field_names = ["Old Filename", "New Filename"]
 rr = filesIngest()
-rr.select_image_file()
+rr.select_files('videos')
 
 
 
 
 def regexOps(filename):
-  pattern = r"(IMG)_(\d{8})(\d)"
-  replacement = r"\1_\2_\3"
+
+  ### Uncomment which pattern u want to use
+
+  # pattern = r"(IMG)_(\d{8})(\d)"
+  # replacement = r"\1_\2_\3"
+  
+  pattern = r"(IMG)_(\d{4})"
+  replacement = r"\1_\2"
+  
+  # pattern = r'PXL_(\d{8})_(\d{6})\d*'
+  # replacement = r'IMG_\1_\2'
+  
   return re.sub(pattern, replacement, filename)
 
 

@@ -28,8 +28,19 @@ if platform.system() == 'Windows':
 
 def getImageDate(filepath):
   date_str = os.path.splitext(os.path.basename(filepath))[0].split("_")[1]
-  date_obj = datetime.strptime(date_str, "%Y%m%d")
-  return date_obj
+  time_str = os.path.splitext(os.path.basename(filepath))[0].split("_")[2]
+  date_obj = datetime.strptime(date_str, "%Y%m%d")  ## this must be true otherwise ERR
+  
+  try:
+    time_obj = datetime.strptime(time_str, "%H%M%S")
+  
+  except:
+    print(Fore.MAGENTA + 'Error parsing time string '+ time_str+ ', possibly invalid character. Replacing with 00:00:00' + Style.RESET_ALL)
+    time_str = '000000'
+    time_obj = datetime.strptime(time_str, "%H%M%S")
+  
+  datetime_obj = datetime.combine(date_obj.date(), time_obj.time())
+  return datetime_obj
 
 
 
@@ -45,7 +56,7 @@ img = filesIngest()
 
 # init prettytable
 table = PrettyTable()
-table.field_names = ["File Path", "File Name", "File Date Extract"]
+table.field_names = ["File Path", "File Name", "File Datetime Extract"]
 
 
 # prompt to get files list
@@ -55,8 +66,8 @@ img.select_files('videos')
 
 # for listing in table
 for i in img.getFileList():
-  date_obj = getImageDate(i)
-  date_formatted = date_obj.strftime("%d/%m/%Y")
+  datetime_obj = getImageDate(i)
+  date_formatted = datetime_obj.strftime("%Y-%m-%d %H:%M:%S")
   table.add_row([i, os.path.basename(i), date_formatted])
   
 print(table)
@@ -89,7 +100,6 @@ while True:
     print(Style.RESET_ALL)
     exit(0)
   elif confirm2 == 'y':
-    print(Fore.YELLOW + 'Proceed with next instructions.')
     break
   else:
     print(Fore.RED + 'Invalid input. Please try again.')
@@ -103,18 +113,18 @@ for j in img.getFileList():
   
   try:
     
-    dateobj = getImageDate(j)
+    datetime_obj = getImageDate(j)
 
 
     ## TODO: change date encoded
-    date_time_string = f"{dateobj.strftime("%Y-%m-%d")} 00:00:00"  # Time is set to 00:00:00
+    date_formatted = datetime_obj.strftime("%Y-%m-%d %H:%M:%S")
     tempfilename = f'{os.path.dirname(j)}/temp.mp4'
-    command = f'ffmpeg -y -i "{j}" -c copy -metadata creation_time="{date_time_string}" "{tempfilename}"'
+    command = f'ffmpeg -y -i "{j}" -c copy -metadata creation_time="{date_formatted}" "{tempfilename}"'
     ### YES WINDOWS TERMINAL CAN ONLY INTERPRET DOUBLE QUOTE AS ENCLOSING FOR ANY THAT HAS SPACES!
     print(command)
     print(tempfilename)
     
-    if os.path.exists(j): countdown(Fore.YELLOW + 'File ' + j + ' will be overitten. Please cancel in', 10)
+    if os.path.exists(j): countdown(Fore.YELLOW + 'File ' + j + ' will be overitten. Please cancel in', 1)
     print(Style.RESET_ALL)
 
     subprocess.run(command)
@@ -127,7 +137,7 @@ for j in img.getFileList():
 
     ## change THE file creation date and modified date
     
-    timestamp = dateobj.timestamp()
+    timestamp = datetime_obj.timestamp()
     if platform.system() == 'Windows':
       # Convert timestamp to Windows file time
       wintime = pywintypes.Time(timestamp)
@@ -142,7 +152,7 @@ for j in img.getFileList():
     
     
     ## print success statement
-    print(Fore.GREEN + os.path.basename(j) + ' video data has been changed to ' + dateobj.strftime("%d/%m/%Y"))
+    print(Fore.GREEN + os.path.basename(j) + ' video data has been changed to ' + datetime_obj.strftime("%d/%m/%Y"))
     print(Style.RESET_ALL)
     sleep(0.2)
   

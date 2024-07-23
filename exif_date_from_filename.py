@@ -28,8 +28,19 @@ os.chdir(exiftool_location)
 
 def getImageDate(filepath):
   date_str = os.path.splitext(os.path.basename(filepath))[0].split("_")[1]
+  time_str = os.path.splitext(os.path.basename(filepath))[0].split("_")[2]
   date_obj = datetime.strptime(date_str, "%Y%m%d")
-  return date_obj
+  
+  try:
+    time_obj = datetime.strptime(time_str, "%H%M%S")
+    return (date_obj, time_obj)
+  
+  except:
+    print(Fore.YELLOW + 'Error parsing time string '+ time_str+ ', possibly invalid character. Replacing with 00:00:00')
+    time_str = '000000'
+    time_obj = datetime.strptime(time_str, "%H%M%S")
+    return (date_obj, time_obj)
+  
 
 
 
@@ -49,14 +60,14 @@ table.field_names = ["File Path", "File Name", "File Date Extract"]
 
 
 # prompt to get files list
-img.select_image_file()
+img.select_files('images')
 
 
 
 # for listing in table
 for i in img.getFileList():
   date_obj = getImageDate(i)
-  date_formatted = date_obj.strftime("%d/%m/%Y")
+  date_formatted = date_obj.strftime("%Y-%m-%d")
   table.add_row([i, os.path.basename(i), date_formatted])
   
 print(table)
@@ -131,7 +142,7 @@ for j in img.getFileList():
     
     
     ## print success statement
-    print(Fore.GREEN + os.path.basename(j) + ' EXIF data has been changed to ' + dateobj.strftime("%d/%m/%Y"))
+    print(Fore.GREEN + os.path.basename(j) + ' EXIF data has been changed to ' + dateobj.strftime("%Y-%m-%d"))
     print(Style.RESET_ALL)
     sleep(0.2)
   
