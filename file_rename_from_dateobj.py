@@ -9,11 +9,15 @@ from colorama import Fore, Style
 from time import sleep
 
 
+### REVIEW MEDIA TYPE FIRST BEFORE RUNNING THE SCRIPT
+mediatype = 'photos'
+
+
 
 table = PrettyTable()
 table.field_names = ["Old Filename", "Datetime Extract", "New Filename"]
 rr = filesIngest()
-rr.select_files('videos')
+rr.select_files(mediatype)
 
 
 
@@ -24,11 +28,13 @@ def newFilename(oldfilepath, whatReturn):
   fileonly = os.path.basename(oldfilepath)
 
   # fetch datetime
-  dtobj = rr.getFile_EncodedDate(oldfilepath)
+  dtobj = rr.getFile_EncodedDate(oldfilepath, mediatype)
   
-
-  pattern = r"(\w{3})_(\d{4}).(\w)"
-  replacement = f"IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}." + r"\3"
+  ### PLEASE CHANGE THE PATTERN HERE
+  # pattern = r"(\w{3})_(\d{4}).(\w)"
+  # replacement = f"IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}." + r"\3"
+  pattern = r'^(.*?).(\w+)$'
+  replacement = f"IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}." + r"\2"
 
   if whatReturn == 'filename':
     return re.sub(pattern, replacement, fileonly)
