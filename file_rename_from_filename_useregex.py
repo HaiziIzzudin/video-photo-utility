@@ -7,14 +7,12 @@ import os
 from colorama import just_fix_windows_console
 just_fix_windows_console()
 from colorama import Fore, Style
+RESET = Style.RESET_ALL
+MAGENTA = Fore.LIGHTMAGENTA_EX
+GREEN = Fore.GREEN
+YELLOW = Fore.YELLOW
+RED = Fore.RED
 from time import sleep
-
-
-
-table = PrettyTable()
-table.field_names = ["No.", "Old Filename", "New Filename"]
-rr = filesIngest()
-rr.select_files('videos') ## IMAGES or VIDEOS valid
 
 
 
@@ -43,46 +41,45 @@ def regexOps(filename):
 
 
 
-i = 0
-for name in rr.getFileList():
-  i += 1
-  newfilename = regexOps(name)
-  table.add_row([i, name, newfilename])
+if __name__ == '__main__':
+  table = PrettyTable()
+  table.field_names = ["No.", "Old Filename", "New Filename"]
+  rr = filesIngest()
+  rr.select_files('videos') ## IMAGES or VIDEOS valid
 
-print(table)
-
-
-
-
-
-confirm = input("confirm rename? (y / enter other to quit) ")
-
-if confirm == 'y':
+  i = 0
   for name in rr.getFileList():
+    i += 1
     newfilename = regexOps(name)
-    print(Fore.YELLOW + 'Renaming '+ name + ' to new filename ' + newfilename)
-    
-    while True:
-      
-      try:
-        os.rename(name, newfilename)
-        print(Fore.GREEN + 'Renaming '+ name + ' to new filename ' + newfilename + ' completed successfully.')
-        break
-      
-      except FileExistsError:
-        print(Fore.LIGHTMAGENTA_EX + 'File '+ newfilename + ' already exists.', end=' ')
-        newfilename = fixFileExists(newfilename)
-        print(Fore.LIGHTMAGENTA_EX + 'Change by 1 sec to ' + newfilename)
+    table.add_row([i, name, newfilename])
 
+  print(table)
+
+  confirm = input("confirm rename? (y / enter other to quit) ")
+
+  if confirm == 'y':
+    for name in rr.getFileList():
+      newfilename = regexOps(name)
+      print(YELLOW + 'Renaming '+ name + ' to new filename ' + newfilename+RESET)
+      
+      while True:
+        
+        try:
+          os.rename(name, newfilename)
+          print(GREEN + 'Renamed '+ name + ' to new filename '+newfilename+'.'+RESET)
+          break
+        
+        except FileExistsError:
+          print(MAGENTA + 'File '+ newfilename + ' already exists.'+RESET, end=' ')
+          newfilename = fixFileExists(newfilename)
+          print(MAGENTA + 'Change by 1 sec to ' + newfilename+RESET)
+
+        sleep(0.1)
+      
       sleep(0.1)
-    
-    sleep(0.1)
 
-else:
-  print(Fore.RED + 'Not receiving correct input. Exiting...\n')
-  print(Style.RESET_ALL)
-  exit(0)
+  else:
+    print(RED + 'Not receiving correct input. Exiting...\n'+RESET)
+    exit(0)
 
-
-
-print(Style.RESET_ALL)
+  print(RESET)
