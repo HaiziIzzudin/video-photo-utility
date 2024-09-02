@@ -23,7 +23,7 @@ if platform.system() == 'Windows':
 
 
 exiftool_location = r"C:\Program Files\XnViewMP\AddOn"
-mediatype = 'images' ### IMAGES / VIDEOS
+mediatype = 'videos' ### IMAGES / VIDEOS
 
 
 # change directory to the exiftool location first
@@ -137,9 +137,9 @@ for j in img.getFileList():
       print(Style.RESET_ALL)
 
       subprocess.run(command)
-      sleep(0.5)
+      sleep(0.1)
       send2trash( convert2raw(j) )
-      sleep(0.5)
+      sleep(0.2)
       os.rename( tempfilename , j )
     
     elif mediatype == 'images':
@@ -172,7 +172,7 @@ for j in img.getFileList():
     ## print success statement
     print(Fore.GREEN + os.path.basename(j) + ' video data has been changed to ' + datetime_obj.strftime("%d/%m/%Y"))
     print(Style.RESET_ALL)
-    sleep(0.2)
+    # sleep(0.2)
   
 
   

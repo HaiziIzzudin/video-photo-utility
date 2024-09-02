@@ -14,7 +14,7 @@ from time import sleep
 table = PrettyTable()
 table.field_names = ["No.", "Old Filename", "New Filename"]
 rr = filesIngest()
-rr.select_files('images') ## IMAGES or VIDEOS valid
+rr.select_files('videos') ## IMAGES or VIDEOS valid
 
 
 
@@ -29,8 +29,14 @@ def regexOps(filename):
   # pattern = r"(IMG)_(\d{4})"
   # replacement = r"\1_\2"
   
-  pattern = r'PXL_(\d{8})_(\d{6})(.*).(\w{3})'
-  replacement = r'IMG_\1_\2.\4'
+  # pattern = r'PXL_(\d{8})_(\d{6})(\d{3})(.*).(\w{3})'   # eg. PXL_98765432_0123459876_ABC.jpg
+  # replacement = r'IMG_\1_\2\4.\5'
+  
+  # pattern = r'VID_(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{3})(.*).(\w{3})'  # VID_2022-11-09-12-09-52-254.x264_meta.mp4
+  # replacement = r'IMG_\1\2\3_\4\5\6\8.\9'
+  
+  pattern = r'(\w+)\@(\d{2})-(\d{2})-(\d{4})_(\d{2})-(\d{2})-(\d{2}).(\w+)'  # photo_184@21-06-2024_16-59-36
+  replacement = r'IMG_\4\3\2_\5\6\7.\8'
   
   return re.sub(pattern, replacement, filename)
 
@@ -66,11 +72,11 @@ if confirm == 'y':
       except FileExistsError:
         print(Fore.LIGHTMAGENTA_EX + 'File '+ newfilename + ' already exists.', end=' ')
         newfilename = fixFileExists(newfilename)
-        print(Fore.LIGHTMAGENTA_EX + 'Decrement by 1 to ' + newfilename)
+        print(Fore.LIGHTMAGENTA_EX + 'Change by 1 sec to ' + newfilename)
 
-      sleep(0.2)
+      sleep(0.1)
     
-    sleep(0.2)
+    sleep(0.1)
 
 else:
   print(Fore.RED + 'Not receiving correct input. Exiting...\n')

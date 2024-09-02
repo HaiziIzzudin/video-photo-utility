@@ -1,4 +1,5 @@
 from filesIngest import filesIngest
+from dealing_with_file_exists import fixFileExists
 
 import re
 from prettytable import PrettyTable
@@ -10,7 +11,7 @@ from time import sleep
 
 
 ### REVIEW MEDIA TYPE FIRST BEFORE RUNNING THE SCRIPT
-mediatype = 'photos'
+mediatype = 'videos'
 
 
 
@@ -61,9 +62,23 @@ if confirm == 'y':
   for name in rr.getFileList():
     newfilename = f"{os.path.dirname(name)}/{newFilename(name, 'filename')}"
     print(Fore.YELLOW + 'Renaming '+ name + ' to new filename ' + newfilename)
-    os.rename(name, newfilename)
-    print(Fore.GREEN + 'Renaming '+ name + ' to new filename ' + newfilename + ' completed successfully.')
+    
+    while True:
+      
+      try:
+        os.rename(name, newfilename)
+        print(Fore.GREEN + 'Renaming '+ name + ' to new filename ' + newfilename + ' completed successfully.')
+        break
+      
+      except FileExistsError:
+        print(Fore.LIGHTMAGENTA_EX + 'File '+ newfilename + ' already exists.', end=' ')
+        newfilename = fixFileExists(newfilename)
+        print(Fore.LIGHTMAGENTA_EX + 'Decrement by 1 to ' + newfilename)
+
+      sleep(0.2)
+    
     sleep(0.2)
+
 else:
   print(Fore.RED + 'Not receiving correct input. Exiting...\n')
   print(Style.RESET_ALL)

@@ -13,7 +13,7 @@ from datetime import datetime
 table = PrettyTable()
 table.field_names = ["No.", "Filename", "Datetime Taken/Encoded", "Old Date Created/Mod", "New Date Created/Mod"]
 
-mediatype = 'images' # IMAGES / VIDEOS
+mediatype = 'videos' # IMAGES / VIDEOS
 
 rr = filesIngest()
 rr.select_files(mediatype)

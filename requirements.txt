@@ -1,0 +1,8 @@
+pyside6
+prettytable
+colorama
+pytz
+pymediainfo
+pyexiftool
+pywin32
+send2trash
