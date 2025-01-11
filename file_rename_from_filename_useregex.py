@@ -45,7 +45,7 @@ if __name__ == '__main__':
   table = PrettyTable()
   table.field_names = ["No.", "Old Filename", "New Filename"]
   rr = filesIngest()
-  rr.select_files('videos') ## IMAGES or VIDEOS valid
+  rr.select_files('images') ## IMAGES or VIDEOS valid
 
   i = 0
   for name in rr.getFileList():
@@ -66,13 +66,13 @@ if __name__ == '__main__':
         
         try:
           os.rename(name, newfilename)
-          print(GREEN + 'Renamed '+ name + ' to new filename '+newfilename+'.'+RESET)
+          print(GREEN + '\nRenamed '+ name + ' to new filename '+newfilename+'.'+RESET)
           break
         
         except FileExistsError:
           print(MAGENTA + 'File '+ newfilename + ' already exists.'+RESET, end=' ')
           newfilename = fixFileExists(newfilename)
-          print(MAGENTA + 'Change by 1 sec to ' + newfilename+RESET)
+          print(MAGENTA + 'Change by 1 sec to ' + newfilename+RESET, end='\r')
 
         sleep(0.1)
       

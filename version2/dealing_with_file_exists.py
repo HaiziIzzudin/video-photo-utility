@@ -5,7 +5,7 @@ def fixFileExists(file: str):
 
   base = path.basename(file)
 
-  f = base.split("_")
+  f = base.split("_") # ['IMG', '9876542', '101213.jpg']
 
   prefix = f[0]
   datestr: str = f[1]

@@ -11,12 +11,12 @@ from time import sleep
 
 
 ### REVIEW MEDIA TYPE FIRST BEFORE RUNNING THE SCRIPT
-mediatype = 'videos'
+mediatype = 'images'
 
 
 
 table = PrettyTable()
-table.field_names = ["Old Filename", "Datetime Extract", "New Filename"]
+table.field_names = ["No.", "Old Filename", "Datetime Extract", "New Filename"]
 rr = filesIngest()
 rr.select_files(mediatype)
 
@@ -34,8 +34,12 @@ def newFilename(oldfilepath, whatReturn):
   ### PLEASE CHANGE THE PATTERN HERE
   # pattern = r"(\w{3})_(\d{4}).(\w)"
   # replacement = f"IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}." + r"\3"
+  # pattern = r'^(.*?).(\w+)$'
+  # replacement = f'IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}.' + r"\2"
+  
+  # filename.jpg (for photoshop exported projects)
   pattern = r'^(.*?).(\w+)$'
-  replacement = f"IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}." + r"\2"
+  replacement = f'IMG_{dtobj.strftime("%Y%m%d_%H%M%S")}' + '.' + r"\2"
 
   if whatReturn == 'filename':
     return re.sub(pattern, replacement, fileonly)
@@ -46,9 +50,14 @@ def newFilename(oldfilepath, whatReturn):
 
 
 
+count = 0
+total = len(rr.getFileList())
 for name in rr.getFileList():
-  newfilename = f"{os.path.dirname(name)}/{newFilename(name, 'filename')}"
-  table.add_row([name, newFilename(name, 'datetimestr'), newfilename])
+  count += 1
+  dt_extract = newFilename(name, 'filename')
+  print(f"[{count}/{total}] {name}")
+  newfilename = f"{os.path.dirname(name)}/{dt_extract}"
+  table.add_row([count, name, dt_extract, newfilename])
 
 print(table)
 
@@ -75,9 +84,9 @@ if confirm == 'y':
         newfilename = fixFileExists(newfilename)
         print(Fore.LIGHTMAGENTA_EX + 'Decrement by 1 to ' + newfilename)
 
-      sleep(0.2)
+      sleep(0.1)
     
-    sleep(0.2)
+    sleep(0.1)
 
 else:
   print(Fore.RED + 'Not receiving correct input. Exiting...\n')

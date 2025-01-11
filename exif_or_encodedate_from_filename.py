@@ -4,7 +4,6 @@ from raw import convert2raw
 
 import subprocess
 import os
-from datetime import datetime
 from prettytable import PrettyTable
 from time import sleep
 import platform
@@ -23,7 +22,7 @@ if platform.system() == 'Windows':
 
 
 exiftool_location = r"C:\Program Files\XnViewMP\AddOn"
-mediatype = 'videos' ### IMAGES / VIDEOS
+mediatype = 'images' ### IMAGES / VIDEOS
 
 
 # change directory to the exiftool location first
@@ -31,21 +30,7 @@ os.chdir(exiftool_location)
 
 
 
-def getImageDate(filepath):
-  date_str = os.path.splitext(os.path.basename(filepath))[0].split("_")[1]
-  time_str = os.path.splitext(os.path.basename(filepath))[0].split("_")[2]
-  date_obj = datetime.strptime(date_str, "%Y%m%d")  ## this must be true otherwise ERR
-  
-  try:
-    time_obj = datetime.strptime(time_str, "%H%M%S")
-  
-  except:
-    print(Fore.MAGENTA + 'Error parsing time string '+ time_str+ ', possibly invalid character. Replacing with 00:00:00' + Style.RESET_ALL)
-    time_str = '000000'
-    time_obj = datetime.strptime(time_str, "%H%M%S")
-  
-  datetime_obj = datetime.combine(date_obj.date(), time_obj.time())
-  return datetime_obj
+
 
 
 
